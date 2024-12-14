@@ -6,13 +6,38 @@ html{
 }
 
 
-body{
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
   background-image: url('./img/bgImg.jpg'); /* Adjust the path to your image */
   background-size: cover; /* Ensures the image covers the entire background */
   background-position: center; /* Centers the image */
 }
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
+.content-wrapper {
+  flex: 1;
+  padding: 20px;
+}
 
 .roboto-black {
   font-family: "Roboto", serif;
@@ -118,25 +143,28 @@ body{
   align-items: center;
   padding: 26px 20px;
   position: relative;
+  
 }
 
 .header-title {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   font-weight: 900;
+  margin-bottom: 10px;
 }
 
 .user-menu {
-  position: absolute;
-  right: 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 12px;
 }
 
 .user-logo {
   width: 40px;
   height: 40px;
-  margin-right: 10px;
+  margin-right: 9px;
   cursor: pointer;
 }
 
@@ -166,11 +194,41 @@ body{
   color: #fff;
 }
 
+.tagline{
+  font-size: 18px;
+}
+
+footer {
+  background-color: #198754; /* Optional: to make the footer stand out */
+    color: #fff;
+    text-align: center;
+    padding: 75px;
+}
+
+.footer-content {
+  max-width: 1200px;
+  width: 100%;
+  text-align: left; /* Left alignment for the content inside the footer */
+  font-size: 22px;
+}
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto; /* Allows horizontal scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Ensure the table takes the full width of its container */
+.table {
+  width: 100%;
+  table-layout: auto; /* Allows the table to resize based on content */
+  border-collapse: collapse;
 }
 
 
@@ -183,8 +241,37 @@ body{
   .user-logo {
     width: 25px;
     height: 25px;
-    margin-right: 10px;
-    cursor: pointer;
-    
   }
+
+  .header-container {
+    align-items: center; /* Center align items in the column direction */
+  }
+
+  .header-title {
+    text-align: center;
+    margin-bottom: 10px; /* Add margin to separate from user-menu */
+  }
+
+  .user-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 5px;
+    right:auto;
+    margin-bottom: 10px;
+  }
+
+  .custom-dropdown-menu {
+    position: absolute;
+    left:0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    width: 200px;
+    color: black;
+  }
+
 }

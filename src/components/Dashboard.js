@@ -89,7 +89,8 @@ const Dashboard=()=> {
                 <div className="row mt-4 mx-3 d-flex justify-content-center text-center">
                 {userDetails ? (
                         <div className="col-md-4 my-4 rounded shadow bg-white">
-                             <table className="table table-borderless" >
+                        <div className="table-responsive">
+                            <table className="table table-borderless">
                                 <tbody>
                                     <tr>
                                         <td className="card-text bg-transparent">User ID:</td>
@@ -112,6 +113,7 @@ const Dashboard=()=> {
                                 </tbody>
                             </table>
                         </div>
+                    </div>            
                     ) : (
                         <p className="text-center text-white">Loading user details...</p>
                     )}

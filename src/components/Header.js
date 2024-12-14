@@ -38,7 +38,7 @@ const Header = () => {
 
   return (
     <div className="header-container bg-success text-white">
-      <h3 className="text-center header-title">Public Grievance Portal</h3>
+      <h3 className="text-center header-title">PUBLIC GRIEVANCE PORTAL<p className='tagline'>(Automated Complaint Notifier)</p> </h3>
       {user && (
         <div className="user-menu">
           <div className="custom-dropdown" ref={dropdownRef}>

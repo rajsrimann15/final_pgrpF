@@ -1,6 +1,6 @@
 // Login.js
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from './AuthContext';
@@ -9,6 +9,8 @@ import '../App.css';
 const backendLink = process.env.REACT_APP_BACKEND_LINK;
 
 function LoginForm() {
+  
+  
   const [formData, setFormData] = useState({
     userId: '',
     password: '',
@@ -17,6 +19,13 @@ function LoginForm() {
   const [notification, setNotification] = useState('');
   const history = useHistory();
   const { login } = useAuth();
+  const { user, logout } = useAuth();
+  
+  useEffect(() => {
+          if (user) {
+              history.push('/home');
+          }
+      }, [user, history]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
