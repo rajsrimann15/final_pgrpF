@@ -302,7 +302,7 @@ function SignupForm() {
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
-                  <button type="button" className="btn btn-primary mt-2" onClick={PhSendOtp}>
+                  <button type="button" className="btn btn-warning mt-2" onClick={PhSendOtp}>
                     Send OTP
                   </button>
                 </div>
@@ -317,7 +317,7 @@ function SignupForm() {
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
                 />
-                <button type="button" className="btn btn-primary mt-2" onClick={PhVerifyOtp}>
+                <button type="button" className="btn btn-warning mt-2" onClick={PhVerifyOtp}>
                   Verify OTP
                 </button>
                 {notification && <p>{notification}</p>}
@@ -326,7 +326,15 @@ function SignupForm() {
             <button type="submit" className="btn btn-warning mt-2">
               Sign Up
             </button>
-           <div className="text-white py-4">{notification && <p>{notification}</p>}</div> 
+           <div className="text-white py-4">{notification && (
+                    <div className="notification-popup">
+                        <div className="notification-content">
+                            <span>{notification}</span>
+                            <button onClick={() => setNotification('')} className="close-btn">×</button>
+                        </div>
+                    </div>
+                    )}
+          </div> 
           </form>
         </div>
       </div>
