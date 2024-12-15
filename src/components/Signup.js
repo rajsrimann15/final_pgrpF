@@ -290,7 +290,7 @@ function SignupForm() {
                   Upload File
                 </button>
               </div>
-              {/* // SMS OTP
+              
               <div className="mt-3" id="recaptcha-container"></div>
                 <div className="mt-3">
                   <label htmlFor="phoneNumber" className="form-label text-white">Phone Number</label>
@@ -322,7 +322,7 @@ function SignupForm() {
                 </button>
                 {notification && <p>{notification}</p>}
               </div>
-            )} */}
+            )} 
             <button type="submit" className="btn btn-warning mt-2">
               Sign Up
             </button>

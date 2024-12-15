@@ -62,40 +62,56 @@ function LoginForm() {
     }
   };
 
+  const goToDemo = () => {
+    history.push('/demo'); // Redirect to login page
+};
+
+
   return (
-   <div className="d-flex justify-content-center align-items-center mt-n5">
-      <div className="container bg-success py-4 px-3 m-4 rounded shadow square-container"> 
-      <Link to="/admin-login" className="py-1 px-2 mt-5 text-white ">Admin Login</Link>
-        <h3 className="text-center roboto-black white-text">LOGIN</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3 px-5">
-            <input
-              type="text"
-              className="form-control py-4 px-3 mt-5"
-              placeholder="User Id"
-              name="userId"
-              value={formData.userId}
-              onChange={handleChange}
-              required
-            />
+
+    <>
+      <button className="btn btn-success mx-3 my-3" onClick={goToDemo}>Have a Demo !</button>
+      <div className="d-flex justify-content-center align-items-center mt-n5">
+          <div className="container bg-success py-4 px-3 m-4 rounded shadow square-container"> 
+          <Link to="/admin-login" className="py-1 px-2 mt-5 text-white ">Admin Login</Link>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3 px-5">
+                <input
+                  type="text"
+                  className="form-control py-4 px-3 mt-5"
+                  placeholder="User Id"
+                  name="userId"
+                  value={formData.userId}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-3 px-5">
+                <input
+                  type="password"
+                  className="form-control py-4 px-3 mt-5"
+                  placeholder="Password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-warning mt-2 mx-5">Login</button>
+            </form>
+            <div className="text-white py-4">{notification && (
+                        <div className="notification-popup">
+                            <div className="notification-content">
+                                <span>{notification}</span>
+                                <button onClick={() => setNotification('')} className="close-btn">×</button>
+                            </div>
+                        </div>
+                      )}
+              </div>
+            <Link to="/signup" className="py-1 px-2 mt-5 text-white">Create an account?</Link>
           </div>
-          <div className="mb-3 px-5">
-            <input
-              type="password"
-              className="form-control py-4 px-3 mt-5"
-              placeholder="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-warning mt-2 mx-5">Login</button>
-        </form>
-        <div className="text-white py-4">{notification && <p>{notification}</p>}</div>
-        <Link to="/signup" className="py-1 px-2 mt-5 text-white">Create an account?</Link>
-      </div>
-    </div>
+        </div>
+     </>
   );
 }
 
