@@ -107,7 +107,7 @@ const Dashboard=()=> {
                                     <tr>
                                         <td className="card-text bg-transparent">Id Proof:</td>
                                         <td className="card-text bg-transparent">
-                                            <a href={`${userDetails.fileLink}?${secretLink}`}>View Here</a>
+                                            <a href={`${userDetails.fileLink}`}>View Here</a>
                                         </td>
                                     </tr>
                                 </tbody>
