@@ -33,7 +33,7 @@ const Load =()=>{
 
 
 const Home= ()=> {
-    const { user,logout } = useAuth(); // Access the user context
+    const { user} = useAuth(); // Access the user context
     const history = useHistory(); // Hook for navigation
     
     const [formData, setFormData] = useState({
@@ -50,7 +50,7 @@ const Home= ()=> {
     const [imgPr, setImgPr] = useState(null);
     const [location, setLocation] = useState('Getting location...');
     const [isLoading, setIsLoading] = useState(false);
-    const [fadeOut, setFadeOut] = useState(false);
+ 
 
     
     // Redirect to login if the user is not authenticated
@@ -112,7 +112,7 @@ const Home= ()=> {
       }
   }, [formData.fileLink]);
 
-    
+    // Show notification message for 3 seconds
   useEffect(() => {
     if (notification) {
         const timer = setTimeout(() => {
@@ -217,70 +217,64 @@ const Home= ()=> {
 
     //....................GeoCoding.............//
     //getLocation func call
-     const getLocation = () => {
-        if (navigator.geolocation) {
+    const getLocation = () => {
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError, {
-        enableHighAccuracy: true, // Request more accurate location
-        timeout: 5000,
-        maximumAge: 0,
-      });
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        });
+      } else {
+        setNotification('Geolocation is not supported by this browser.');
+      }
+    };
+    
+    // Location function using OpenStreetMap Nominatim API
+    const showPosition = async (position) => {
+      setIsLoading(true);
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+    
+      try {
+        const response = await axios.get(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+        );
+    
+        if (response.data && response.data.display_name) {
+          setFormData((prevData) => ({
+            ...prevData,
+            location: response.data.display_name, // Formatted address
+          }));
         } else {
-          setNotification('Geolocation is not supported by this browser.');
+          setNotification('No results found');
         }
-      };
-      
-      // Location func
-      const showPosition = async (position) => {
-        setIsLoading(true);
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        const apiKey = googleAPiKey; // Replace with your actual Google Maps API key
+      } catch (error) {
+        setNotification('An error occurred: ' + error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     
-        try {
-          const response = await axios.get(
-            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
-          );
-          if (response.data.status === 'OK') {
-            if (response.data.results[0]) {
-   
-                setFormData((prevData) => ({
-                  ...prevData,
-                  location: response.data.results[0].formatted_address
-                }));
-
-            } else {
-              setNotification('No results found');
-            }
-          } else {
-            setNotification('Geocoder failed due to: ' + response.data.status);
-          }
-        } catch (error) {
-          setNotification('An error occurred: ' + error.message);
-        }finally{
-          setIsLoading(false);
-        }
-      };
-    
-      //Location error
-      const showError = (error) => {
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            setNotification('User denied the request for Geolocation.');
-            break;
-          case error.POSITION_UNAVAILABLE:
-            setNotification('Location information is unavailable.');
-            break;
-          case error.TIMEOUT:
-            setNotification('The request to get user location timed out.');
-            break;
-          case error.UNKNOWN_ERROR:
-            setNotification('An unknown error occurred.');
-            break;
-          default:
-            setNotification('An unknown error occurred.');
-            break;
-        }
-      };
+    // Location error handling
+    const showError = (error) => {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          setNotification('User denied the request for Geolocation.');
+          break;
+        case error.POSITION_UNAVAILABLE:
+          setNotification('Location information is unavailable.');
+          break;
+        case error.TIMEOUT:
+          setNotification('The request to get user location timed out.');
+          break;
+        case error.UNKNOWN_ERROR:
+          setNotification('An unknown error occurred.');
+          break;
+        default:
+          setNotification('An unknown error occurred.');
+          break;
+      }
+    };
     //........................................//
 
     //get Title
@@ -353,34 +347,32 @@ const Home= ()=> {
     } 
 
     setIsLoading(true);
-    const prompt="Don't add message before it, as i will return the message to frontend, just return only the right option as String from the array.The array [north,west,south,east]."
-    const input=`${formData.location}${prompt}`;
-  try {
-    const result = await model.generateContent(input);
-    const text=result.response.text().trim();
-    console.log(text);
-        setFormData((prevData) => ({
-          ...prevData,
-          zone:text
-        }));
-     
+   
+    try {
+      const response = await axios.post(`${backendLink}/complaints/zone`, {
+          title: formData.location
+      }, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,  
+            'Content-Type': 'application/json',
+          },
+      });
+      console.log(response.data.zone);
+      setFormData((prevData) => ({
+        ...prevData,
+        zone: response.data.zone
+
+      }));
+
   } catch (error) {
-    console.error("Error generating content:", error);
+    setNotification('Error. Please try again.');
   }finally{
     setIsLoading(false);
   }
   };
 
-  // open dashboard
-  const openDashboard=async()=>{
-      history.push('/dashboard');
-  };
 
-
-  const viewHistory=async()=>{
-    history.push('/viewhistory');
-  };
-
+// Loading popup
   const loadingPopup = (
     <div className="custom-popup">
       <div className="spinner"></div>
@@ -388,17 +380,10 @@ const Home= ()=> {
     </div>
   );
 
-    //handle logout
-    const handleLogout = () => {
-        logout(); // Call the logout function from context
-        history.push('/login'); // Redirect to login page
-    };
-
-
     return ( 
         <>
             <div className="d-flex justify-content-center align-items-center mt-n5">
-                <div className="container bg-success py-4 px-3 m-4 rounded shadow">
+                <div className="container gradient py-4 px-3 m-4 rounded shadow">
                     <h3 className="text-center text-white">Register a New Complaint</h3>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
@@ -483,10 +468,10 @@ const Home= ()=> {
                         </button>
                         <select className="mx-2" name="zone" id="zone" value={formData.zone} onChange={handleChange} required>
                           <option value="Select an option">Select an option</option>
-                          <option value="north">North</option>
-                          <option value="south">South</option>
-                          <option value="east">East</option>
-                          <option value="west">West</option>
+                          <option value="North">North</option>
+                          <option value="South">South</option>
+                          <option value="East">East</option>
+                          <option value="West">West</option>
                         </select>
                         </div>
                         <button type="submit" className="btn btn-warning mt-2">Submit</button>

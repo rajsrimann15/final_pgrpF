@@ -11,10 +11,7 @@ const Header = () => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    if (!user) {
-      history.push('/login');
-    }
-
+   
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);

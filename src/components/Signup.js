@@ -1,21 +1,46 @@
 // SignupForm.js
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 import '../App.css';
-
+import Loading from './Loading';
+import { useAuth } from './AuthContext';
+import { useHistory } from 'react-router-dom';
 const backendLink = process.env.REACT_APP_BACKEND_LINK;
 
-function SignupForm() {
+
+const Load =()=>{
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500); // Adjust the timeout duration as needed
+  }, []);
+
+  return (
+    <div>
+      {isLoading ? <Loading/> : < SignupForm/>}
+    </div>
+  );
+};
+
+
+
+
+
+const SignupForm=()=> {
+  
+  const { user} = useAuth(); // Access the user context
+  const history = useHistory(); // Hook for navigation
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     address: '',
     password: '',
-    otp: '',
     fileLink: ''
   });
 
@@ -23,11 +48,15 @@ function SignupForm() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [idProof, setIdProof] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Firebase Phone OTP
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState(null);
+
+    useEffect(() => {
+        if (user) {
+            history.push('/home');
+        }
+    }, [user, history]);
+
 
   // Handle input change
   const handleChange = (e) => {
@@ -37,6 +66,17 @@ function SignupForm() {
       [name]: value,
     });
   };
+
+  //notification popup close 
+    useEffect(() => {
+      if (notification) {
+          const timer = setTimeout(() => {
+              setNotification('');
+          }, 3000);
+          // Clear the timeout if the component unmounts before the timeout completes
+          return () => clearTimeout(timer);
+      }
+      }, [notification]);
 
   // handling id file change
   const handleFileChange = (e) => {
@@ -75,56 +115,12 @@ function SignupForm() {
     }
   };
 
-  /********************************************************************************/
   
-  // SMS OTP via Firebase
-  // Configure reCAPTCHA verifier
-  const setupRecaptcha = () => {
-    if (auth) {
-      const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'invisible',
-        callback: () => {
-            console.log('recaptcha resolved..')
-        }
-    });
-      return recaptchaVerifier;
-    } else {
-      console.error('Auth object is undefined.');
-      return null;
-    }
-  };
-  
-
-  const PhSendOtp = async () => {
-    try {
-      const appVerifier = setupRecaptcha();
-      if (!appVerifier) {
-        throw new Error('Recaptcha setup failed. Please try again.');
-      }
-      const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-      setConfirmationResult(confirmationResult);
-      setNotification('OTP sent to your phone number!');
-    } catch (error) {
-      console.error('Error sending OTP:', error);
-      setNotification('Error sending OTP. Please try again.');
-    }
-  };
-  
-
-  const PhVerifyOtp = async () => {
-    try {
-      const result = await confirmationResult.confirm(verificationCode);
-      console.log('User signed in successfully:', result.user);
-      setNotification('Phone number verified successfully!');
-    } catch (error) {
-      console.error('Error verifying OTP:', error);
-      setNotification('Error verifying OTP. Please try again.');
-    }
-  };
 
   /********************************************************************************/
   // Send Email OTP
   const sendOtp = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post(`${backendLink}/users/send-otp`, { email: formData.email }, {
         headers: {
@@ -132,17 +128,22 @@ function SignupForm() {
         },
       });
 
+      setOtpSent(true);
       console.log('OTP sent:', response.data);
       setNotification('OTP has been sent to your email.');
-      setOtpSent(true);
+      
     } catch (error) {
       console.log('Error sending OTP:', error);
       setNotification(error.response.data.message);
+    }finally{
+      setIsLoading(false);
     }
   };
 
   // Handle OTP verification
   const verifyOtp = async () => {
+    
+    setIsLoading(true);
     try {
       const response = await axios.post(`${backendLink}/users/verify-otp`, { email: formData.email, otp: formData.otp }, {
         headers: {
@@ -162,12 +163,15 @@ function SignupForm() {
       console.error('Error verifying OTP:', error);
       setNotification('Wrong OTP. Please try again.');
       setOtpVerified(false);
+    }finally{
+      setIsLoading(false);
     }
   };
 
   /********************************************************************************/
   // Handle file upload
   const uploadFile = async () => {
+    setIsLoading(true);
     if (!idProof) {
       setNotification('Please select a file first.');
       return;
@@ -188,13 +192,23 @@ function SignupForm() {
 
       setFormData((prevData) => ({
         ...prevData,
-        fileLink: response.data.fileUrl, // Assuming response contains fileUrl
+        fileLink: response.data.fileId, // Assuming response contains fileUrl
       }));
     } catch (error) {
       console.error('Error uploading file:', error);
       setNotification('Error uploading file. Please try again.');
+    }finally{
+      setIsLoading(false);
     }
   };
+
+  ///loading popuop
+  const loadingPopup = (
+    <div className="custom-popup">
+      <div className="spinner"></div>
+      <p>Processing...</p>
+    </div>
+  );
 
   /********************************************************************************/
   return (
@@ -290,42 +304,10 @@ function SignupForm() {
                   Upload File
                 </button>
               </div>
-              
-              <div className="mt-3" id="recaptcha-container"></div>
-                <div className="mt-3">
-                  <label htmlFor="phoneNumber" className="form-label text-white">Phone Number</label>
-                  <input
-                    type="tel"
-                    id="phoneNumber"
-                    className="form-control"
-                    placeholder="+911234567890"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                  <button type="button" className="btn btn-warning mt-2" onClick={PhSendOtp}>
-                    Send OTP
-                  </button>
-                </div>
-            {confirmationResult && (
-              <div className="mt-3">
-                <label htmlFor="verificationCode" className="form-label text-white">Verification Code</label>
-                <input
-                  type="text"
-                  id="verificationCode"
-                  className="form-control"
-                  placeholder="Enter verification code"
-                  value={verificationCode}
-                  onChange={(e) => setVerificationCode(e.target.value)}
-                />
-                <button type="button" className="btn btn-warning mt-2" onClick={PhVerifyOtp}>
-                  Verify OTP
-                </button>
-                {notification && <p>{notification}</p>}
-              </div>
-            )} 
             <button type="submit" className="btn btn-warning mt-2">
               Sign Up
             </button>
+            {isLoading && loadingPopup}
            <div className="text-white py-4">{notification && (
                     <div className="notification-popup">
                         <div className="notification-content">
@@ -333,7 +315,7 @@ function SignupForm() {
                             <button onClick={() => setNotification('')} className="close-btn">×</button>
                         </div>
                     </div>
-                    )}
+                )}
           </div> 
           </form>
         </div>
@@ -342,4 +324,4 @@ function SignupForm() {
   );
 }
 
-export default SignupForm;
+export default Load;

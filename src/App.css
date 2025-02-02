@@ -5,6 +5,18 @@ html{
   scroll-behavior: smooth;
 }
 
+.gradient{
+  background: linear-gradient(to bottom, #071937d0, #050d76);
+}
+
+.button{
+  background-color: #13adb0;
+  color:  #fffcfc;
+}
+
+.button:hover {
+  background-color: #0e8a8d; /* A darker shade for hover effect */
+}
 
 html, body {
   margin: 0;
