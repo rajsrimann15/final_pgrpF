@@ -70,9 +70,9 @@ function LoginForm() {
   return (
 
     <>
-      <button className="btn btn-success mx-3 my-3" onClick={goToDemo}>Have a Demo !</button>
+      <button className="btn btn-secondary mx-3 my-3" onClick={goToDemo}>Have a Demo !</button>
       <div className="d-flex justify-content-center align-items-center mt-n5">
-          <div className="container bg-success py-4 px-3 m-4 rounded shadow square-container"> 
+          <div className="container gradient py-4 px-3 m-4 rounded shadow square-container"> 
           <Link to="/admin-login" className="py-1 px-2 mt-5 text-white ">Admin Login</Link>
             <form onSubmit={handleSubmit}>
               <div className="mb-3 px-5">

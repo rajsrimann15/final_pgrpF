@@ -73,7 +73,7 @@ const returnHome = () => {
   return (
     <>
         
-        <button className="btn btn-success mx-3 my-3" onClick={returnHome}>Back to home</button>
+        <button className="btn btn-secondary mx-3 my-3" onClick={returnHome}>Back to home</button>
             <h3 className="text-center text-black">Complaint History</h3>
             <div className="table-responsive px-4">
               <table className="table table-bordered table-striped">

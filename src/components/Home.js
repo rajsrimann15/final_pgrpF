@@ -207,7 +207,8 @@ const Home= ()=> {
               shortDescription: '',
               longDescription: '',
               title: '',
-              sector: ''
+              sector: '',
+              zone: '',
           });
       } catch (error) {
           console.error('Error submitting complaint', error);

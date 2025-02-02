@@ -214,7 +214,7 @@ const SignupForm=()=> {
   return (
     <>
       <div className="d-flex justify-content-center align-items-center mt-n5">
-        <div className="container bg-success py-4 px-3 m-4 rounded">
+        <div className="container gradient py-4 px-3 m-4 rounded">
           <Link to="/" className="py-1 px-2 mt-5 text-white">Back to Login</Link>
           <h3 className="text-center text-white">SIGNUP FORM</h3>
           <form onSubmit={handleSubmit}>
@@ -293,12 +293,13 @@ const SignupForm=()=> {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="idProof" className="form-label text-white">Upload ID Proof</label>
+                <label htmlFor="idProof" className="form-label text-white">Upload ID Proof - PDF only </label>
                 <input
                   type="file"
                   id="idProof"
                   className="form-control"
                   onChange={handleFileChange}
+                  
                 />
                 <button type="button" className="btn btn-warning mt-2" onClick={uploadFile}>
                   Upload File

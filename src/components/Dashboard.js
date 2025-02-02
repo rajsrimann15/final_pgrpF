@@ -79,9 +79,9 @@ const Dashboard=()=> {
     
     return (
     <>
-        <button className="btn btn-success mx-3 my-3" onClick={returnHome}>Back to home</button>
+        <button className="btn btn-secondary mx-3 my-3" onClick={returnHome}>Back to home</button>
         <div className="d-flex justify-content-center align-items-center mt-n5">
-            <div className="container bg-success py-4 px-3 m-4 rounded shadow"> 
+            <div className="container gradient py-4 px-3 m-4 rounded shadow"> 
                 <div className="text-center">
                     <img src={userIcon} alt="User Icon" className="rounded-circle mb-3" style={{ width: '100px', height: '100px' }} />
                     {userDetails && <h3 className="font-weight-bold text-white">{userDetails.name}</h3>}

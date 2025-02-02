@@ -54,7 +54,7 @@ function LoginForm() {
 
   return (
     <div className="d-flex justify-content-center align-items-center mt-n5">
-      <div className="container bg-success py-4 px-3 m-4 rounded shadow square-container">
+      <div className="container gradient py-4 px-3 m-4 rounded shadow square-container">
       <Link to="/login" className="py-1 px-2 mt-5 text-white">User Login</Link>
         <h3 className="text-center text-white">ADMIN LOGIN</h3>
         <form onSubmit={handleSubmit}>

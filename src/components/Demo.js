@@ -286,9 +286,9 @@ const Demo= ()=> {
 
     return ( 
         <>
-            <button className="btn btn-success mx-3 my-3" onClick={returnLogin}>Back to Login Page</button>
+            <button className="btn btn-secondary mx-3 my-3" onClick={returnLogin}>Back to Login Page</button>
             <div className="d-flex justify-content-center align-items-center mt-n5">
-                <div className="container bg-success py-4 px-3 m-4 rounded shadow">
+                <div className="container gradient py-4 px-3 m-4 rounded shadow">
                     <h3 className="text-center text-white">Register a New Complaint</h3>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
