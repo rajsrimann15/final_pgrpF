@@ -97,6 +97,7 @@ const Demo= ()=> {
         } catch (error) {
             console.error('Error uploading file:', error);
             setNotification('Error uploading file. Please try again.');
+            setIsLoading(false);
         }
     };
 
@@ -134,7 +135,7 @@ const Demo= ()=> {
             }));
         
           } catch (error) {
-            setNotification('Error. Please try again.');
+            setNotification('Failed to process the image or Image is not related public grievance');
           }finally {
             setIsLoading(false); // Hide loading animation
           }

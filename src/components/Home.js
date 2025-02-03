@@ -139,7 +139,7 @@ const Home= ()=> {
             }));
         
           } catch (error) {
-            setNotification('Error. Please try again.');
+            setNotification('Failed to process the image or Image is not related public grievance');
           }finally {
             setIsLoading(false); // Hide loading animation
           }
