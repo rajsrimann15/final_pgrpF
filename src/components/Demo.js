@@ -136,6 +136,7 @@ const Demo= ()=> {
         
           } catch (error) {
             setNotification('Failed to process the image or Image is not related public grievance');
+
           }finally {
             setIsLoading(false); // Hide loading animation
           }
