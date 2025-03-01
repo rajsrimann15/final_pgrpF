@@ -126,24 +126,31 @@ const Home= ()=> {
     // img process
     const imgProcess = async () => {
       try { 
-          const response = await axios.post(`${backendLink}/complaints/process`, { fileUrl:formData.fileLink }, {
-              headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-              },
-            });
+        const response = await axios.post(`${backendLink}/complaints/process`, { fileUrl: formData.fileLink }, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+
+    
+        if (response.data.description === "False" ||response.data.description === "false") {  
+          setNotification("Image is not related to a public grievance");  
+          return;  
+        }
+    
+        setFormData((prevData) => ({
+          ...prevData,
+          shortDescription: response.data.description
+        }));
       
-            setFormData((prevData) => ({
-              ...prevData,
-              shortDescription: response.data.description
-            }));
-        
-          } catch (error) {
-            setNotification('Failed to process the image or Image is not related public grievance');
-          }finally {
-            setIsLoading(false); // Hide loading animation
-          }
-        };
+      } catch (error) {
+        setNotification('Failed to process the image');
+      } finally {
+        setIsLoading(false); // Hide loading animation
+      }
+    };   
 
     //long Decription{
     const longDescription=async ()=>{

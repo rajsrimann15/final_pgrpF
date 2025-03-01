@@ -128,6 +128,11 @@ const Demo= ()=> {
                 'Content-Type': 'application/json',
               },
             });
+
+            if (response.data.description === "False" ||response.data.description === "false") {  
+              setNotification("Image is not related to a public grievance");  
+              return;  
+            }
       
             setFormData((prevData) => ({
               ...prevData,
